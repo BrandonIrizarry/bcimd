@@ -75,10 +75,16 @@ Also used before attempting to generate a new one."
 
       (let (ids)
 
-        (while (re-search-forward "^+[[:space:]]+\\[.+\\](#\\([[:graph:]]+\\))" nil t)
-          (let ((id (match-string-no-properties 1)))
-            (kill-region (match-beginning 0) (match-end 0))
-            (push id ids)))
+        (let ((num-entries 0))
+          (while (re-search-forward "^+[[:space:]]+\\[.+\\](#\\([[:graph:]]+\\))" nil t)
+            (let ((id (match-string-no-properties 1)))
+              (kill-region (match-beginning 0) (match-end 0))
+              (push id ids)
+              (cl-incf num-entries)))
+
+          (dotimes (_ num-entries)
+            (line-beginning-position)
+            (kill-line)))
 
         (setq ids (nreverse ids))
 
