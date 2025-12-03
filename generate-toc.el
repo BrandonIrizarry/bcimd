@@ -29,11 +29,10 @@ An empty Table of Contents level-1 header must already exist."
         (setq objs (nreverse objs))
 
         ;; Insert the TOC entries!
-        (save-excursion
-          (goto-char toc)
-          (forward-line 2)
+        (goto-char toc)
+        (forward-line 2)
 
-          (dolist (obj objs)
-            (let ((content (car obj))
-                  (id (cdr obj)))
-              (insert (format "+ [%s](#%s)\n" content id)))))))))
+        (dolist (obj objs)
+          (let ((content (car obj))
+                (id (cdr obj)))
+            (insert (format "+ [%s](#%s)\n" content id))))))))
