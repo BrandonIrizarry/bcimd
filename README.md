@@ -13,7 +13,7 @@ excellent [markdown-mode](https://jblevins.org/projects/markdown-mode/).
 
 This library contains:
 
-1. A function for generating a table of contents
+1. Functions for generating and removing a table of contents.
 
 <a id="installation"></a>
 # Installation
