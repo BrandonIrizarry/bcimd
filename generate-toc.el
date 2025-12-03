@@ -3,36 +3,29 @@
 
 An empty Table of Contents level-1 header must already exist."
 
-  (defvar *toc*
-    "End-position of TOC header shared by all functions.")
-
-  (let ((*toc* (save-excursion
-                 (goto-char (point-min))
-                 (search-forward "# Table of Contents" nil t))))
-    (unless *toc*
+  ;; Find and save the end position of the Table of Contents header.
+  (let ((toc (save-excursion
+               (goto-char (point-min))
+               (search-forward "# Table of Contents" nil t))))
+    (unless toc
       (user-error "Missing TOC header"))
-    (bcimd-insert-anchors)))
 
-(defun bcimd-insert-anchors ()
-  "Insert anchor elements above headers.
+    (save-excursion
+      (goto-char toc)
 
-Return list of ids."
-  (save-excursion
-    (goto-char *toc*)
-
-    (let (ids)
-      (while (re-search-forward "#[[:space:]]+\\([[:graph:]].*\\)" nil t)
-        (let* ((header-start (match-beginning 0))
-               (header-content (match-string-no-properties 1))
-               (id (mapconcat #'downcase
-                              (string-split header-content " ")
-                              "-")))
-          (save-excursion
-            (goto-char header-start)
-            (forward-line -1)
-            (insert (format "<a id=\"%s\"></a>" id)))
-          (push (cons header-content id) ids)))
-      (nreverse ids))))
+      (let (ids)
+        (while (re-search-forward "#[[:space:]]+\\([[:graph:]].*\\)" nil t)
+          (let* ((header-start (match-beginning 0))
+                 (header-content (match-string-no-properties 1))
+                 (id (mapconcat #'downcase
+                                (string-split header-content " ")
+                                "-")))
+            (save-excursion
+              (goto-char header-start)
+              (forward-line -1)
+              (insert (format "<a id=\"%s\"></a>" id)))
+            (push (cons header-content id) ids)))
+        (nreverse ids)))))
 
 
 (defun test ()
