@@ -23,6 +23,7 @@ An empty Table of Contents level-1 header must already exist."
       (user-error "Missing TOC header"))
 
     (save-excursion
+      (bcimd--remove-toc toc)
       (goto-char toc)
 
       ;; Construct a list of pairs matching header content with its
@@ -56,29 +57,33 @@ An empty Table of Contents level-1 header must already exist."
                 (id (cdr obj)))
             (insert (format "+ [%s](#%s)\n" content id))))))))
 
-(defun bcimd--remove-toc (&optional toc)
+;;;###autoload
+(defun bcimd-remove-toc ()
   "Remove the existing Table of Contents.
 
-TOC is assumed to be the position of point just after the Table of
-Contents.
+Also used before attempting to generate a new one."
+  (interactive)
 
-Used before attempting to generate a new one."
+  (let ((toc (save-excursion
+               (goto-char (point-min))
+               (search-forward "# Table of Contents" nil t))))
+    (unless toc
+      (user-error "Missing TOC header"))
 
-  ;; Use a default value of point, for testing.
-  (setq toc (or toc (point)))
-  (goto-char toc)
+    (save-excursion
+      (goto-char toc)
 
-  (let (ids)
+      (let (ids)
 
-    (while (re-search-forward "^+[[:space:]]+\\[.+\\](#\\([[:graph:]]+\\))" nil t)
-      (let ((id (match-string-no-properties 1)))
-        (kill-region (match-beginning 0) (match-end 0))
-        (push id ids)))
+        (while (re-search-forward "^+[[:space:]]+\\[.+\\](#\\([[:graph:]]+\\))" nil t)
+          (let ((id (match-string-no-properties 1)))
+            (kill-region (match-beginning 0) (match-end 0))
+            (push id ids)))
 
-    (setq ids (nreverse ids))
+        (setq ids (nreverse ids))
 
-    (dolist (id ids)
-      (search-forward (format "<a id=\"%s\"></a>" id))
-      (kill-region (match-beginning 0) (match-end 0)))))
+        (dolist (id ids)
+          (search-forward (format "<a id=\"%s\"></a>" id))
+          (kill-region (match-beginning 0) (match-end 0)))))))
 
 (provide 'bcimd)
