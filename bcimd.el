@@ -13,6 +13,9 @@ An empty Table of Contents level-1 header must already exist."
     (user-error "Not a Markdown buffer."))
 
   ;; Find and save the end position of the Table of Contents header.
+  ;;
+  ;; Use SAVE-EXCURSION in case a user error leaves point at the end
+  ;; of the buffer. We then of course have to manually visit TOC.
   (let ((toc (save-excursion
                (goto-char (point-min))
                (search-forward "# Table of Contents" nil t))))
