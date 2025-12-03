@@ -15,9 +15,6 @@ An empty Table of Contents level-1 header must already exist."
 
       ;; Construct a list of pairs matching header content with its
       ;; equivalent HTML id attribute value. Call this list OBJS.
-      ;;
-      ;; While we're at it, insert the necessary HTML anchor elements
-      ;; above each header.
       (let (objs)
         (while (re-search-forward "#[[:space:]]+\\([[:graph:]].*\\)" nil t)
           (let* ((header-start (match-beginning 0))
@@ -25,11 +22,14 @@ An empty Table of Contents level-1 header must already exist."
                  (id (mapconcat #'downcase
                                 (string-split content " ")
                                 "-")))
+            (push (cons content id) objs)
+
+            ;; While we're at it, insert the necessary HTML anchor elements
+            ;; above each header.
             (save-excursion
               (goto-char header-start)
               (forward-line -1)
-              (insert (format "<a id=\"%s\"></a>" id)))
-            (push (cons content id) objs)))
+              (insert (format "<a id=\"%s\"></a>" id)))))
 
         ;; Make sure OBJS is in forward order, since new entries were
         ;; being pushed to the front of the list.
