@@ -1,0 +1,39 @@
+# Table of Contents
+
+
+
+# Introduction
+
+This library, subsumed in a single file, consists of extras for Emacs'
+excellent [markdown-mode](https://jblevins.org/projects/markdown-mode/).
+
+This library contains:
+
+1. A function for generating a table of contents
+
+# Installation
+
+Insert anywhere in your load path. `use-package` vc-install should
+work too where available, viz.:
+
+```elisp
+(use-package bcimd
+    :vc (:url "https://github.com/BrandonIrizarry/bcimd" :rev :newest)) 
+```
+
+
+# Rationale
+
+I'm using [Eleventy](https://www.11ty.dev) to write a blog. However, manually updating
+the Table of Contents "infrastructure"—inserting anchor tags, along
+with updating the Table of Contents itself—became a hassle, especially
+when deciding on exactly how to divide the post into sections. I found
+myself becoming stingy over the number of sections a post had, just so
+that I could avoid repeated editing. So, I decided that was that, and
+automated that step away with some Elisp.
+
+# Plans
+
+1. [ ] Erase any existing previous table of contents before generating
+       a new one.
+
