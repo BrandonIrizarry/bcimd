@@ -56,4 +56,29 @@ An empty Table of Contents level-1 header must already exist."
                 (id (cdr obj)))
             (insert (format "+ [%s](#%s)\n" content id))))))))
 
+(defun bcimd--remove-toc (&optional toc)
+  "Remove the existing Table of Contents.
+
+TOC is assumed to be the position of point just after the Table of
+Contents.
+
+Used before attempting to generate a new one."
+
+  ;; Use a default value of point, for testing.
+  (setq toc (or toc (point)))
+  (goto-char toc)
+
+  (let (ids)
+
+    (while (re-search-forward "^+[[:space:]]+\\[.+\\](#\\([[:graph:]]+\\))" nil t)
+      (let ((id (match-string-no-properties 1)))
+        (kill-region (match-beginning 0) (match-end 0))
+        (push id ids)))
+
+    (setq ids (nreverse ids))
+
+    (dolist (id ids)
+      (search-forward (format "<a id=\"%s\"></a>" id))
+      (kill-region (match-beginning 0) (match-end 0)))))
+
 (provide 'bcimd)
