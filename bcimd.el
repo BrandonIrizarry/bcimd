@@ -12,6 +12,8 @@ An empty Table of Contents level-1 header must already exist."
   (unless (eq major-mode 'markdown-mode)
     (user-error "Not a Markdown buffer."))
 
+  (bcimd-remove-toc)
+
   ;; Find and save the end position of the Table of Contents header.
   ;;
   ;; Use SAVE-EXCURSION in case a user error leaves point at the end
@@ -23,7 +25,6 @@ An empty Table of Contents level-1 header must already exist."
       (user-error "Missing TOC header"))
 
     (save-excursion
-      (bcimd--remove-toc toc)
       (goto-char toc)
 
       ;; Construct a list of pairs matching header content with its
