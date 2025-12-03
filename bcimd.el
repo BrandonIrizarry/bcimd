@@ -83,6 +83,10 @@ Also used before attempting to generate a new one."
               (push id ids)
               (cl-incf num-entries)))
 
+          ;; Make sure we don't delete the first anchor.
+          (goto-char toc)
+          (forward-line)
+
           (dotimes (_ num-entries)
             (line-beginning-position)
             (kill-line)))
