@@ -1,7 +1,16 @@
+;; -*- lexical-binding: t; -*-
+
+
+;;;###autoload
 (defun bcimd-generate-toc ()
   "Generate a Table of Contents for the post.
 
 An empty Table of Contents level-1 header must already exist."
+
+  (interactive)
+
+  (unless (eq major-mode 'markdown-mode)
+    (user-error "Not a Markdown buffer."))
 
   ;; Find and save the end position of the Table of Contents header.
   (let ((toc (save-excursion
@@ -43,3 +52,5 @@ An empty Table of Contents level-1 header must already exist."
           (let ((content (car obj))
                 (id (cdr obj)))
             (insert (format "+ [%s](#%s)\n" content id))))))))
+
+(provide 'bcimd)
