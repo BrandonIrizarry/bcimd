@@ -12,15 +12,7 @@ An empty Table of Contents level-1 header must already exist."
   (unless (eq major-mode 'markdown-mode)
     (user-error "Not a Markdown buffer."))
 
-  (bcimd-remove-toc)
-
-  ;; Find and save the end position of the Table of Contents header.
-  ;;
-  ;; Use SAVE-EXCURSION in case a user error leaves point at the end
-  ;; of the buffer. We then of course have to manually visit TOC.
-  (let ((toc (save-excursion
-               (goto-char (point-min))
-               (search-forward "# Table of Contents" nil t))))
+  (let ((toc (bcimd-remove-toc)))
     (unless toc
       (user-error "Missing TOC header"))
 
@@ -62,9 +54,17 @@ An empty Table of Contents level-1 header must already exist."
 (defun bcimd-remove-toc ()
   "Remove the existing Table of Contents.
 
-Also used before attempting to generate a new one."
+Also used before attempting to generate a new one.
+
+An empty Table of Contents level-1 header must already exist.
+
+Return position just after Table of Contents header."
   (interactive)
 
+  ;; Find and save the end position of the Table of Contents header.
+  ;;
+  ;; Use SAVE-EXCURSION in case a user error leaves point at the end
+  ;; of the buffer. We then of course have to manually visit TOC.
   (let ((toc (save-excursion
                (goto-char (point-min))
                (search-forward "# Table of Contents" nil t))))
@@ -95,6 +95,9 @@ Also used before attempting to generate a new one."
 
         (dolist (id ids)
           (search-forward (format "<a id=\"%s\"></a>" id))
-          (kill-region (match-beginning 0) (match-end 0)))))))
+          (kill-region (match-beginning 0) (match-end 0)))
+
+        ;; Communicate the value of TOC back to the caller.
+        toc))))
 
 (provide 'bcimd)
