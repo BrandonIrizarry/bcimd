@@ -58,7 +58,7 @@ Also used before attempting to generate a new one.
 
 An empty Table of Contents level-1 header must already exist.
 
-Return position just after Table of Contents header."
+Return position just after Table of Contents header, TOC."
   (interactive)
 
   ;; Find and save the end position of the Table of Contents header.
@@ -75,7 +75,6 @@ Return position just after Table of Contents header."
       (goto-char toc)
 
       (let (ids)
-
         ;; Remove the existing entries under "Table of Contents",
         ;; recording the id reference by each link.
         (while (re-search-forward "^+[[:space:]]+\\[.+\\](#\\([[:graph:]]+\\))" nil t)
@@ -83,17 +82,11 @@ Return position just after Table of Contents header."
             (kill-region (match-beginning 0) (match-end 0))
             (line-beginning-position)
             (kill-line)
-            (push id ids)))
 
-        ;; As usual, get the correct list order.
-        (setq ids (nreverse ids))
-
-        ;; Remove the anchor elements.
-        (dolist (id ids)
-          (search-forward (format "<a id=\"%s\"></a>" id))
-          (kill-region (match-beginning 0) (match-end 0)))
-
-        ;; Communicate the value of TOC back to the caller.
+            ;; Remove the corresponding anchor tag.
+            (save-excursion
+              (search-forward (format "<a id=\"%s\"></a>" id))
+              (kill-region (match-beginning 0) (match-end 0)))))
         toc))))
 
 (provide 'bcimd)
