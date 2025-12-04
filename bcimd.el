@@ -87,6 +87,8 @@ Return position just after Table of Contents header, TOC."
             (save-excursion
               (search-forward (format "<a id=\"%s\"></a>" id))
               (kill-region (match-beginning 0) (match-end 0)))))
+
+        ;; Return TOC, so that the caller can navigate to it.
         toc))))
 
 (provide 'bcimd)
