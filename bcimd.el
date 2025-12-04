@@ -25,6 +25,8 @@ An empty Table of Contents level-1 header must already exist."
         (while (re-search-forward "#[[:space:]]+\\([[:graph:]].*\\)" nil t)
           (let* ((header-start (match-beginning 0))
                  (content (match-string-no-properties 1))
+
+                 ;; Example: "Cool ID" becomes "cool-id"
                  (id (mapconcat #'downcase
                                 (string-split content " ")
                                 "-")))
