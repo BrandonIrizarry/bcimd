@@ -15,6 +15,10 @@ This library contains:
 
 1. Functions for generating and removing a table of contents.
 
+# Demo
+
+![Generate and remove a Table of Contents](https://github.com/BrandonIrizarry/bcimd/blob/master/output-2025-12-03-19%3A32%3A31.gif)
+
 <a id="installation"></a>
 # Installation
 
