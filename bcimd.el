@@ -85,8 +85,8 @@ Return position just after Table of Contents header, TOC."
 
             ;; Remove the corresponding anchor tag.
             (save-excursion
-              (search-forward (format "<a id=\"%s\"></a>" id))
-              (kill-region (match-beginning 0) (match-end 0)))))
+              (when (search-forward (format "<a id=\"%s\"></a>" id) nil t)
+                (kill-region (match-beginning 0) (match-end 0))))))
 
         ;; Return TOC, so that the caller can navigate to it.
         toc))))
