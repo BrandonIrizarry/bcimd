@@ -37,15 +37,12 @@ An empty Table of Contents level-1 header must already exist."
               (forward-line -1)
               (insert (format "<a id=\"%s\"></a>" id)))))
 
-        ;; Make sure OBJS is in forward order, since new entries were
-        ;; being pushed to the front of the list.
-        (setq objs (nreverse objs))
-
         ;; Insert the Table of Contents entries into the buffer.
         (goto-char toc)
         (forward-line 2)
 
-        (dolist (obj objs)
+        ;; Be sure to iterate over OBJS in forward order.
+        (dolist (obj (nreverse objs))
           (let ((content (car obj))
                 (id (cdr obj)))
             (insert (format "+ [%s](#%s)\n" content id))))))))
