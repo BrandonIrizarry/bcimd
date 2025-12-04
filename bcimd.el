@@ -76,23 +76,19 @@ Return position just after Table of Contents header."
 
       (let (ids)
 
-        (let ((num-entries 0))
-          (while (re-search-forward "^+[[:space:]]+\\[.+\\](#\\([[:graph:]]+\\))" nil t)
-            (let ((id (match-string-no-properties 1)))
-              (kill-region (match-beginning 0) (match-end 0))
-              (push id ids)
-              (cl-incf num-entries)))
-
-          ;; Make sure we don't delete the first anchor.
-          (goto-char toc)
-          (forward-line)
-
-          (dotimes (_ num-entries)
+        ;; Remove the existing entries under "Table of Contents",
+        ;; recording the id reference by each link.
+        (while (re-search-forward "^+[[:space:]]+\\[.+\\](#\\([[:graph:]]+\\))" nil t)
+          (let ((id (match-string-no-properties 1)))
+            (kill-region (match-beginning 0) (match-end 0))
             (line-beginning-position)
-            (kill-line)))
+            (kill-line)
+            (push id ids)))
 
+        ;; As usual, get the correct list order.
         (setq ids (nreverse ids))
 
+        ;; Remove the anchor elements.
         (dolist (id ids)
           (search-forward (format "<a id=\"%s\"></a>" id))
           (kill-region (match-beginning 0) (match-end 0)))
