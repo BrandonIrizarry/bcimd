@@ -71,21 +71,20 @@ Return position just after Table of Contents header, TOC."
     (save-excursion
       (goto-char toc)
 
-      (let (ids)
-        ;; Remove the existing entries under "Table of Contents",
-        ;; recording the id reference by each link.
-        (while (re-search-forward "^+[[:space:]]+\\[.+\\](#\\([[:graph:]]+\\))" nil t)
-          (let ((id (match-string-no-properties 1)))
-            (kill-region (match-beginning 0) (match-end 0))
-            (line-beginning-position)
-            (kill-line)
+      ;; Remove the existing entries under "Table of Contents",
+      ;; recording the id reference by each link.
+      (while (re-search-forward "^+[[:space:]]+\\[.+\\](#\\([[:graph:]]+\\))" nil t)
+        (let ((id (match-string-no-properties 1)))
+          (kill-region (match-beginning 0) (match-end 0))
+          (line-beginning-position)
+          (kill-line)
 
-            ;; Remove the corresponding anchor tag.
-            (save-excursion
-              (when (search-forward (format "<a id=\"%s\"></a>" id) nil t)
-                (kill-region (match-beginning 0) (match-end 0))))))
+          ;; Remove the corresponding anchor tag.
+          (save-excursion
+            (when (search-forward (format "<a id=\"%s\"></a>" id) nil t)
+              (kill-region (match-beginning 0) (match-end 0))))))
 
-        ;; Return TOC, so that the caller can navigate to it.
-        toc))))
+      ;; Return TOC, so that the caller can navigate to it.
+      toc)))
 
 (provide 'bcimd)
